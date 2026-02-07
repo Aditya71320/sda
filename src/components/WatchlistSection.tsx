@@ -10,9 +10,9 @@ interface WatchlistSectionProps {
 }
 
 const VERDICT_COLORS: Record<string, string> = {
-  BUY: 'bg-emerald-600 text-white border-emerald-500',
-  HOLD: 'bg-amber-600 text-white border-amber-500',
-  SELL: 'bg-red-600 text-white border-red-500',
+  BUY: 'bg-bull/15 text-bull-text border-bull-border',
+  HOLD: 'bg-amber-500/10 text-amber-300 border-amber-500/20',
+  SELL: 'bg-bear/15 text-bear-text border-bear-border',
 }
 
 export default function WatchlistSection({
@@ -83,61 +83,74 @@ export default function WatchlistSection({
   if (!profile) return null
 
   return (
-    <div className="rounded-2xl border border-slate-800 bg-surface p-5 shadow-card">
-      <h2 className="mb-1.5 text-sm font-semibold uppercase tracking-wider text-slate-400">Watchlist</h2>
-      <p className="mb-4 text-sm leading-relaxed text-slate-500">
-        Add tickers to track. The AI will analyze them and notify when any have a <strong className="text-slate-300">BUY</strong> verdict.
+    <div className="glass-card p-5">
+      <div className="mb-1.5 flex items-center gap-2">
+        <svg className="h-4 w-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 12h16.5m-16.5 3.75h16.5M3.75 19.5h16.5M5.625 4.5h12.75a1.875 1.875 0 010 3.75H5.625a1.875 1.875 0 010-3.75z" />
+        </svg>
+        <h2 className="text-xs font-semibold uppercase tracking-widest text-txt-tertiary">Watchlist</h2>
+      </div>
+      <p className="mb-5 text-sm leading-relaxed text-txt-tertiary">
+        Add tickers to track. The AI will analyze them and flag any with a <strong className="text-bull-text">BUY</strong> verdict.
       </p>
 
+      {/* Error */}
       {error && (
-        <div className="mb-4 flex items-start gap-2.5 rounded-xl border border-red-500/30 bg-red-950/40 px-3.5 py-2.5 text-sm text-red-300">
-          <svg className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
-          </svg>
-          <span>{error}</span>
+        <div className="mb-4 flex items-start gap-3 rounded-xl border border-bear-border bg-bear-bg px-4 py-3">
+          <div className="mt-0.5 flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-bear/10">
+            <svg className="h-3 w-3 text-bear" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </div>
+          <span className="text-sm text-bear-text">{error}</span>
         </div>
       )}
 
+      {/* Add ticker form */}
       <form onSubmit={handleAdd} className="mb-5 flex flex-wrap items-end gap-2.5">
-        <div className="min-w-[140px]">
-          <label className="mb-1.5 block text-xs font-medium text-slate-400">Add ticker</label>
+        <div className="min-w-[160px]">
+          <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-wider text-txt-tertiary">Add ticker</label>
           <input
             ref={addRef}
             type="text"
             placeholder="e.g. AAPL"
-            className="w-full rounded-lg border border-slate-700/80 bg-slate-900/80 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-sky-500/60 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
+            className="w-full rounded-xl border border-border-subtle bg-bg-inset px-3.5 py-2.5 text-sm text-txt-primary placeholder-txt-tertiary shadow-inset"
           />
         </div>
         <button
           type="submit"
-          className="rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 active:scale-[0.98]"
+          className="inline-flex items-center gap-1.5 rounded-xl bg-accent px-4 py-2.5 text-sm font-semibold text-white shadow-btn hover:bg-accent-strong active:scale-[0.97]"
         >
+          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
+          </svg>
           Add
         </button>
       </form>
 
+      {/* Ticker chips */}
       {profile.tickers.length > 0 && (
         <>
           <ul className="mb-4 flex flex-wrap gap-2">
             {profile.tickers.map((t) => (
               <li
                 key={t}
-                className="flex items-center gap-1.5 rounded-lg bg-slate-800/80 px-3 py-1.5 text-sm text-slate-200 ring-1 ring-slate-700/60"
+                className="group flex items-center gap-1.5 rounded-lg border border-border-subtle bg-zinc-800/50 px-3 py-1.5 text-sm"
               >
                 <button
                   type="button"
                   onClick={() => onAnalyzeTicker(t)}
-                  className="font-medium hover:text-sky-400"
+                  className="font-semibold text-txt-primary hover:text-accent"
                 >
                   {t}
                 </button>
                 <button
                   type="button"
                   onClick={() => handleRemove(t)}
-                  className="ml-0.5 text-slate-500 hover:text-red-400"
+                  className="text-txt-tertiary opacity-0 transition-opacity group-hover:opacity-100 hover:text-bear"
                   aria-label={`Remove ${t}`}
                 >
-                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </button>
@@ -148,55 +161,71 @@ export default function WatchlistSection({
             type="button"
             onClick={handleCheckWatchlist}
             disabled={checking}
-            className="rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-600 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none"
+            className="inline-flex items-center gap-2 rounded-xl bg-bull/15 px-4 py-2.5 text-sm font-semibold text-bull-text ring-1 ring-inset ring-bull-border hover:bg-bull/20 active:scale-[0.97] disabled:opacity-50 disabled:pointer-events-none"
           >
-            {checking ? 'Checking watchlist...' : 'Check watchlist (run AI analysis)'}
+            {checking ? (
+              <>
+                <div className="h-3.5 w-3.5 animate-spin rounded-full border-2 border-bull-text/30 border-t-bull-text" />
+                <span>Checking watchlist...</span>
+              </>
+            ) : (
+              <>
+                <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.455 2.456L21.75 6l-1.036.259a3.375 3.375 0 00-2.455 2.456z" />
+                </svg>
+                <span>Check watchlist (run AI analysis)</span>
+              </>
+            )}
           </button>
         </>
       )}
 
+      {/* Results */}
       {checkResult && (
-        <div className="mt-5 space-y-4 border-t border-slate-800/80 pt-5">
+        <div className="mt-5 space-y-4 border-t border-border-subtle pt-5">
           {checkResult.good_to_invest.length > 0 && (
-            <div className="rounded-xl border border-emerald-700/40 bg-emerald-950/30 p-4">
-              <h3 className="mb-2 text-sm font-semibold text-emerald-300">
-                Good time to invest (BUY verdict)
-              </h3>
-              <p className="text-sm leading-relaxed text-slate-300">
+            <div className="rounded-xl border border-bull-border bg-bull-bg p-4 shadow-glow-green">
+              <div className="mb-2 flex items-center gap-2">
+                <div className="flex h-6 w-6 items-center justify-center rounded-full bg-bull/15">
+                  <svg className="h-3.5 w-3.5 text-bull" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
+                  </svg>
+                </div>
+                <h3 className="text-sm font-semibold text-bull-text">Good time to invest (BUY verdict)</h3>
+              </div>
+              <p className="text-sm leading-relaxed text-txt-secondary">
                 The engine suggests these tickers may be a good time to consider:{' '}
-                <strong className="text-emerald-300">
-                  {checkResult.good_to_invest.join(', ')}
-                </strong>
+                <strong className="text-bull-text">{checkResult.good_to_invest.join(', ')}</strong>
               </p>
-              <p className="mt-2 text-xs text-slate-500">
+              <p className="mt-2 text-[11px] text-txt-tertiary">
                 Click a ticker above to see full analysis. This is decision support only, not financial advice.
               </p>
             </div>
           )}
           {checkResult.results.length > 0 && (
             <div>
-              <h3 className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-slate-400">All results</h3>
+              <h3 className="mb-3 text-[11px] font-semibold uppercase tracking-widest text-txt-tertiary">All results</h3>
               <ul className="space-y-2">
                 {checkResult.results.map((r) => (
                   <li
                     key={r.ticker}
-                    className="flex flex-wrap items-center gap-2.5 rounded-xl border border-slate-800 bg-slate-900/60 px-4 py-2.5 text-sm"
+                    className="inset-panel flex flex-wrap items-center gap-3 px-4 py-3 text-sm"
                   >
                     <button
                       type="button"
                       onClick={() => onAnalyzeTicker(r.ticker)}
-                      className="font-semibold text-sky-400 hover:underline"
+                      className="font-semibold text-accent hover:underline"
                     >
                       {r.ticker}
                     </button>
                     <span
-                      className={`rounded-md border px-2.5 py-0.5 text-xs font-semibold ${
-                        VERDICT_COLORS[r.verdict] ?? 'bg-slate-600'
+                      className={`rounded-md border px-2.5 py-0.5 text-[11px] font-bold uppercase tracking-wider ${
+                        VERDICT_COLORS[r.verdict] ?? 'bg-zinc-800 text-txt-secondary'
                       }`}
                     >
                       {r.verdict}
                     </span>
-                    <span className="text-slate-500">({r.confidence_score})</span>
+                    <span className="font-mono text-xs text-txt-tertiary">({r.confidence_score})</span>
                   </li>
                 ))}
               </ul>
