@@ -79,8 +79,9 @@ export default function ProfileSelector({ selectedId, onSelect }: ProfileSelecto
 
   if (loading) {
     return (
-      <div className="rounded-lg border border-slate-600 bg-slate-800/50 px-4 py-3 text-sm text-slate-400">
-        Loading profiles…
+      <div className="flex items-center gap-3 rounded-2xl border border-slate-800 bg-surface px-5 py-4 shadow-card">
+        <div className="h-4 w-4 animate-spin rounded-full border-2 border-slate-600 border-t-sky-400" />
+        <span className="text-sm text-slate-400">Loading profiles...</span>
       </div>
     )
   }
@@ -88,21 +89,27 @@ export default function ProfileSelector({ selectedId, onSelect }: ProfileSelecto
   const selected = profiles.find((p) => p.id === selectedId)
 
   return (
-    <div className="rounded-lg border border-slate-600 bg-slate-800/50 p-4">
-      <h2 className="mb-3 text-lg font-semibold text-slate-200">Profile & watchlist</h2>
+    <div className="rounded-2xl border border-slate-800 bg-surface p-5 shadow-card">
+      <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-slate-400">Profile & Watchlist</h2>
       {error && (
-        <div className="mb-3 rounded border border-red-500/80 bg-red-900/30 px-3 py-2 text-sm text-red-200">
-          {error}
+        <div className="mb-4 flex items-start gap-2.5 rounded-xl border border-red-500/30 bg-red-950/40 px-3.5 py-2.5 text-sm text-red-300">
+          <svg className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+          </svg>
+          <span>{error}</span>
         </div>
       )}
       {success && (
-        <div className="mb-3 rounded border border-emerald-500/80 bg-emerald-900/30 px-3 py-2 text-sm text-emerald-200">
-          {success}
+        <div className="mb-4 flex items-start gap-2.5 rounded-xl border border-emerald-500/30 bg-emerald-950/40 px-3.5 py-2.5 text-sm text-emerald-300">
+          <svg className="mt-0.5 h-4 w-4 flex-shrink-0 text-emerald-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>{success}</span>
         </div>
       )}
       <div className="flex flex-wrap items-end gap-3">
-        <div className="min-w-[160px]">
-          <label className="mb-1 block text-xs text-slate-400">Profile</label>
+        <div className="min-w-[170px]">
+          <label className="mb-1.5 block text-xs font-medium text-slate-400">Profile</label>
           <select
             value={selectedId ?? ''}
             onChange={async (e) => {
@@ -119,9 +126,9 @@ export default function ProfileSelector({ selectedId, onSelect }: ProfileSelecto
                 onSelect(p ?? null)
               }
             }}
-            className="w-full rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-white focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+            className="w-full rounded-lg border border-slate-700/80 bg-slate-900/80 px-3.5 py-2.5 text-sm text-white focus:border-sky-500/60 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
           >
-            <option value="">— Select —</option>
+            <option value="">-- Select --</option>
             {profiles.map((p) => (
               <option key={p.id} value={p.id}>
                 {p.name}
@@ -134,37 +141,40 @@ export default function ProfileSelector({ selectedId, onSelect }: ProfileSelecto
             type="button"
             onClick={handleDelete}
             disabled={deleting}
-            className="rounded border border-red-600 bg-red-900/50 px-3 py-2 text-sm font-medium text-red-200 hover:bg-red-800/50 disabled:opacity-50"
+            className="rounded-lg border border-red-800/60 bg-red-950/50 px-3.5 py-2.5 text-sm font-medium text-red-300 hover:bg-red-900/50 active:scale-[0.98] disabled:opacity-50"
             title="Delete this profile"
           >
-            {deleting ? 'Deleting…' : 'Delete profile'}
+            {deleting ? 'Deleting...' : 'Delete profile'}
           </button>
         )}
-        <form onSubmit={handleCreate} className="flex flex-wrap items-end gap-2">
-          <div className="min-w-[140px]">
-            <label className="mb-1 block text-xs text-slate-400">New profile</label>
+        <form onSubmit={handleCreate} className="flex flex-wrap items-end gap-2.5">
+          <div className="min-w-[150px]">
+            <label className="mb-1.5 block text-xs font-medium text-slate-400">New profile</label>
             <input
               type="text"
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               placeholder="Profile name"
-              className="w-full rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+              className="w-full rounded-lg border border-slate-700/80 bg-slate-900/80 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-sky-500/60 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
               disabled={creating}
             />
           </div>
           <button
             type="submit"
             disabled={creating}
-            className="rounded bg-slate-600 px-3 py-2 text-sm font-medium text-white hover:bg-slate-500 disabled:opacity-50"
+            className="rounded-lg bg-slate-700/80 px-3.5 py-2.5 text-sm font-medium text-slate-200 hover:bg-slate-600/80 active:scale-[0.98] disabled:opacity-50"
           >
-            {creating ? 'Creating…' : 'Create'}
+            {creating ? 'Creating...' : 'Create'}
           </button>
         </form>
       </div>
       {selected && (
-        <p className="mt-2 text-xs text-slate-400">
-          Watchlist: {selected.tickers.length ? selected.tickers.join(', ') : '(empty — add tickers below)'}
-        </p>
+        <div className="mt-3.5 flex items-center gap-2 border-t border-slate-800/80 pt-3.5">
+          <span className="text-xs font-medium text-slate-500">Watchlist:</span>
+          <span className="text-xs text-slate-400">
+            {selected.tickers.length ? selected.tickers.join(', ') : '(empty -- add tickers below)'}
+          </span>
+        </div>
       )}
     </div>
   )

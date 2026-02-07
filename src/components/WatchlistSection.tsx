@@ -83,31 +83,34 @@ export default function WatchlistSection({
   if (!profile) return null
 
   return (
-    <div className="rounded-lg border border-slate-600 bg-slate-800/50 p-4">
-      <h2 className="mb-3 text-lg font-semibold text-slate-200">Watchlist</h2>
-      <p className="mb-3 text-sm text-slate-400">
-        Add tickers to track. The AI will analyze them and notify when any have a <strong>BUY</strong> verdict.
+    <div className="rounded-2xl border border-slate-800 bg-surface p-5 shadow-card">
+      <h2 className="mb-1.5 text-sm font-semibold uppercase tracking-wider text-slate-400">Watchlist</h2>
+      <p className="mb-4 text-sm leading-relaxed text-slate-500">
+        Add tickers to track. The AI will analyze them and notify when any have a <strong className="text-slate-300">BUY</strong> verdict.
       </p>
 
       {error && (
-        <div className="mb-3 rounded border border-red-500/80 bg-red-900/30 px-3 py-2 text-sm text-red-200">
-          {error}
+        <div className="mb-4 flex items-start gap-2.5 rounded-xl border border-red-500/30 bg-red-950/40 px-3.5 py-2.5 text-sm text-red-300">
+          <svg className="mt-0.5 h-4 w-4 flex-shrink-0 text-red-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v3.75m9-.75a9 9 0 11-18 0 9 9 0 0118 0zm-9 3.75h.008v.008H12v-.008z" />
+          </svg>
+          <span>{error}</span>
         </div>
       )}
 
-      <form onSubmit={handleAdd} className="mb-4 flex flex-wrap items-end gap-2">
-        <div className="min-w-[120px]">
-          <label className="mb-1 block text-xs text-slate-400">Add ticker</label>
+      <form onSubmit={handleAdd} className="mb-5 flex flex-wrap items-end gap-2.5">
+        <div className="min-w-[140px]">
+          <label className="mb-1.5 block text-xs font-medium text-slate-400">Add ticker</label>
           <input
             ref={addRef}
             type="text"
             placeholder="e.g. AAPL"
-            className="w-full rounded border border-slate-600 bg-slate-800 px-3 py-2 text-sm text-white placeholder-slate-500 focus:border-sky-500 focus:outline-none focus:ring-1 focus:ring-sky-500"
+            className="w-full rounded-lg border border-slate-700/80 bg-slate-900/80 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:border-sky-500/60 focus:outline-none focus:ring-2 focus:ring-sky-500/30"
           />
         </div>
         <button
           type="submit"
-          className="rounded bg-sky-600 px-3 py-2 text-sm font-medium text-white hover:bg-sky-500"
+          className="rounded-lg bg-sky-600 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-sky-500 active:scale-[0.98]"
         >
           Add
         </button>
@@ -115,26 +118,28 @@ export default function WatchlistSection({
 
       {profile.tickers.length > 0 && (
         <>
-          <ul className="mb-3 flex flex-wrap gap-2">
+          <ul className="mb-4 flex flex-wrap gap-2">
             {profile.tickers.map((t) => (
               <li
                 key={t}
-                className="flex items-center gap-1 rounded bg-slate-700 px-2 py-1 text-sm text-slate-200"
+                className="flex items-center gap-1.5 rounded-lg bg-slate-800/80 px-3 py-1.5 text-sm text-slate-200 ring-1 ring-slate-700/60"
               >
                 <button
                   type="button"
                   onClick={() => onAnalyzeTicker(t)}
-                  className="font-medium hover:text-sky-400 hover:underline"
+                  className="font-medium hover:text-sky-400"
                 >
                   {t}
                 </button>
                 <button
                   type="button"
                   onClick={() => handleRemove(t)}
-                  className="ml-1 text-slate-500 hover:text-red-400"
+                  className="ml-0.5 text-slate-500 hover:text-red-400"
                   aria-label={`Remove ${t}`}
                 >
-                  ×
+                  <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                  </svg>
                 </button>
               </li>
             ))}
@@ -143,55 +148,55 @@ export default function WatchlistSection({
             type="button"
             onClick={handleCheckWatchlist}
             disabled={checking}
-            className="rounded bg-emerald-700 px-4 py-2 text-sm font-medium text-white hover:bg-emerald-600 disabled:opacity-50"
+            className="rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-emerald-600 active:scale-[0.98] disabled:opacity-50 disabled:pointer-events-none"
           >
-            {checking ? 'Checking watchlist…' : 'Check watchlist (run AI analysis)'}
+            {checking ? 'Checking watchlist...' : 'Check watchlist (run AI analysis)'}
           </button>
         </>
       )}
 
       {checkResult && (
-        <div className="mt-4 space-y-3 border-t border-slate-600 pt-4">
+        <div className="mt-5 space-y-4 border-t border-slate-800/80 pt-5">
           {checkResult.good_to_invest.length > 0 && (
-            <div className="rounded-lg border-2 border-emerald-600 bg-emerald-900/30 p-4">
-              <h3 className="mb-2 font-semibold text-emerald-300">
+            <div className="rounded-xl border border-emerald-700/40 bg-emerald-950/30 p-4">
+              <h3 className="mb-2 text-sm font-semibold text-emerald-300">
                 Good time to invest (BUY verdict)
               </h3>
-              <p className="text-sm text-slate-200">
+              <p className="text-sm leading-relaxed text-slate-300">
                 The engine suggests these tickers may be a good time to consider:{' '}
-                <strong className="text-emerald-200">
+                <strong className="text-emerald-300">
                   {checkResult.good_to_invest.join(', ')}
                 </strong>
               </p>
-              <p className="mt-2 text-xs text-slate-400">
+              <p className="mt-2 text-xs text-slate-500">
                 Click a ticker above to see full analysis. This is decision support only, not financial advice.
               </p>
             </div>
           )}
           {checkResult.results.length > 0 && (
             <div>
-              <h3 className="mb-2 text-sm font-medium text-slate-300">All results</h3>
+              <h3 className="mb-2.5 text-xs font-semibold uppercase tracking-wider text-slate-400">All results</h3>
               <ul className="space-y-2">
                 {checkResult.results.map((r) => (
                   <li
                     key={r.ticker}
-                    className="flex flex-wrap items-center gap-2 rounded border border-slate-600 bg-slate-800/80 px-3 py-2 text-sm"
+                    className="flex flex-wrap items-center gap-2.5 rounded-xl border border-slate-800 bg-slate-900/60 px-4 py-2.5 text-sm"
                   >
                     <button
                       type="button"
                       onClick={() => onAnalyzeTicker(r.ticker)}
-                      className="font-medium text-sky-400 hover:underline"
+                      className="font-semibold text-sky-400 hover:underline"
                     >
                       {r.ticker}
                     </button>
                     <span
-                      className={`rounded border px-2 py-0.5 text-xs font-medium ${
+                      className={`rounded-md border px-2.5 py-0.5 text-xs font-semibold ${
                         VERDICT_COLORS[r.verdict] ?? 'bg-slate-600'
                       }`}
                     >
                       {r.verdict}
                     </span>
-                    <span className="text-slate-400">({r.confidence_score})</span>
+                    <span className="text-slate-500">({r.confidence_score})</span>
                   </li>
                 ))}
               </ul>
